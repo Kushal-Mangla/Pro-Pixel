@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='drag_drop.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo.jpg') }}" type="image/png">
+    <title>Add files</title>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="">
+                <a href="" class="left_text">DropZone</a>
+            </div>
+            <div class="nav-right">
+                <div class="user-account">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                          </svg> -->
+                    <img src="{{ url_for('static', filename='profile-pic-user.jpeg') }}" alt="">
+                    <div class="dropdown">
+                        <span class="user-name" onclick="toggleDropdown()">{{ user }}</span>
+                        <!-- Dropdown content -->
+                        <div class="dropdown-content" id="myDropdown">
+                            <a href="{{ url_for('index') }}">Log Out</a>
+                            <!-- <a href="{{ 'index' }}" onclick="logout()">Log Out</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <br>
+    
+    <div id="drop-box" class="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)"
+        ondragenter="dragEnterHandler(event)" ondragleave="dragLeaveHandler(event)">
+        <!-- It is getting in center because in body we used text-allign center and same for upload button -->
+        <span class="text">Drag and drop files here to add them</span>
+
+        <div class="flex">
+            <div class="adjust">
+                <button class="dropzone-option" onclick="selectFile('imageInput')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                        class="bi bi-card-image" viewBox="0 0 16 16">
+                        <!-- ... icon paths ... -->
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                        <path
+                            d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z" />
+                    </svg>
+                    <div class="add_image">Add Image</div>
+                </button>
+                <input type="file" id="imageInput" style="display: none" accept="image/*"
+                    onchange="displaySelectedFile('imageInput')">
+            </div>
+            <div class="adjust">
+                <button class="dropzone-option" onclick="selectFile('videoInput')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                        class="bi bi-camera-reels" viewBox="0 0 16 16">
+                        <!-- ... icon paths ... -->
+                        <path d="M6 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0M1 3a2 2 0 1 0 4 0 2 2 0 0 0-4 0" />
+                        <path
+                            d="M9 6h.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 7.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 16H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 8.73V7.27l-3.5 1.555v4.35zM1 8v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1" />
+                        <path d="M9 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6M7 3a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                    </svg>
+                    <div class="add_image">Add Video</div>
+                </button>
+                <input type="file" id="videoInput" style="display: none" accept="video/*"
+                    onchange="displaySelectedFile('videoInput')">
+            </div>
+            <div class="adjust">
+                <button class="dropzone-option" onclick="selectFile('videoInput')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                        class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+                        <path
+                            d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2" />
+                        <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z" />
+                        <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4z" />
+                    </svg>
+                    <div class="add_music">Add Music</div>
+                </button>
+                <input type="file" id="videoInput" style="display: none" accept="video/*"
+                    onchange="displaySelectedFile('videoInput')">
+            </div>
+        </div>
+        <div class="button">
+            <button class="upload" id="upload" >Upload</button>
+            <a href="{{ url_for('edit',user=user) }}">
+                <button class="upload" id="upload">Video Preview</button>
+            </a>
+        </div>
+    </div>
+    <div id="image-container"></div>
+    <script src="{{ url_for('static', filename='drag_drop.js') }}"></script>
+</body>
+
+</html>

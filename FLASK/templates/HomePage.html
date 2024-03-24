@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static',filename='logo.jpg')}}" type="image/png">
+    <title>ProPixel - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='HomePage.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="#" class="logo"><img src="{{ url_for('static',filename='logo.jpg')}}" alt="Logo"></a>
+
+        <ul class="nav-links">
+
+            <li><a href="#" >Home</a></li>
+            <!-- <li><a href="#" >Contact</a></li> -->
+            <button id="openPopupBtn">Contact Us</button>
+            <li class="dropdown" >
+                <a href="#" class="dropbtn" class="a">About Us</a>
+                <div class="dropdown-content">
+                    <a href="https://iDheer.github.io" target="_blank">Inesh Dheer</a>
+                    <a href="https://kushal-mangla.github.io/Kushal-Mangla/" target="_blank">Kushal Mangla</a>
+                    <a href="https://shreyas-mehta-05.github.io" target="_blank">Shreyas Mehta</a>
+                </div>
+            </li>
+
+        </ul>
+        <div class="auth-buttons">
+            <a href="{{ url_for('login') }}">
+            <button class="login-btn">Log In</button>
+            </a>
+            <a href="{{ url_for('signup') }}">
+            <button class="signup-btn" >Sign Up</button>
+        </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="card-1">
+
+        <div class="textofcard1">
+
+            <h1>Welcome to Pro Pixel!</h1>
+            <p>
+                We are a group of 3 students from IIIT Hyderabad trying our best to bring the
+                most breathtaking photography experience to you!
+            </p>
+            <!-- <h2>Let's get started !</h2> -->
+            <span id="element"></span>
+
+        </div>
+
+    </div>
+
+    
+    <div class="arrow left-arrow">&lt;</div>
+    <div class="arrow right-arrow">&gt;</div>
+
+    
+    <div class="pagination">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="popup-container" id="popupContainer">
+        <div class="popup">
+            <span class="close" id="closePopupBtn">&times;</span>
+            <h2>HOLY TRINITY</h2>
+            <img src="{{ url_for('static', filename='holytrinity.jpg') }}" alt="Holy Trinity Image" class="popup-image" height="500px" width="450px">
+            <div class="textbelow">
+            <p class="doosri"><b>IIIT Hyderabad, UG1 Batch of 2023</b></p>
+            <p class="teesri"><b>Email: trilogyiiith@gmail.com</b></p>
+            <p class="chauthi"><b>Convey us your thoughts !</b></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='HomePage.js')}}"></script>
+    <!-- <span id="element"></span> -->
+
+    <!-- Load library from the CDN -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+  
+    <!-- Setup and start animation! -->
+    <script>
+        var typed = new Typed('#element', {
+          strings: ['<h2><i>Let\'s get started!</i></h2>'],
+          typeSpeed: 50,
+          backSpeed: 50, // Speed of backward typing
+          smartBackspace: false, // Disable smart backspace to ensure correct backward typing
+          loop: true, // Set loop to true to repeat infinitely
+          showCursor: false, // Hide the cursor
+        });
+      </script>
+      
+         
+      
+    
+</body>
+
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropZone</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='temp_drag_drop.css') }}">
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='DRAG.css') }}"> -->
+</head>
+<style>
+  /* Popup container */
+  .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  /* The actual popup (hidden by default) */
+  .popup .popup-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    padding: 12px;
+    z-index: 1;
+    border-radius: 8px; /* Adding border radius */
+    color:black;
+  }
+  
+  /* Show the popup when hovering over the popup container */
+  .popup:hover .popup-content {
+    display: block;
+  }
+  
+  /* Logout button */
+  .popup-content .logout-btn {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px; /* Adjusting padding */
+    background-color: #ff5555;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px; /* Adding border radius */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Adding shadow */
+
+    transition: background-color 0.3s;
+  }
+  .popup-content .logout-btn:hover {
+    background-color: #dd3333; /* Change background color on hover */
+  }
+    /* Styles for the modal */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        text-align: center; /* Center the content */
+        position: relative; /* For absolute positioning of spinner */
+    }
+
+    /* Add animation */
+    @keyframes fadeIn {
+        from {opacity: 0;} 
+        to {opacity: 1;}
+    }
+
+    @-webkit-keyframes fadeIn {
+        from {opacity: 0;} 
+        to {opacity: 1;}
+    }
+
+    /* Fade in */
+    .fade-in {
+        animation: fadeIn 0.3s;
+        -webkit-animation: fadeIn 0.3s;
+    }
+
+    /* Loading spinner */
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    @keyframes blinkCursor {
+      50% {
+        border-right-color: transparent;
+      }
+    }
+    
+    @keyframes typeAndDelete {
+      0%,
+      10% {
+        width: 0;
+      }
+      45%,
+      55% {
+        width: 6.2em;
+      } /* adjust width based on content */
+      90%,
+      100% {
+        width: 0;
+      }
+    }
+    
+    .terminal-loader {
+      border: 0.1em solid #333;
+      background-color: #1a1a1a;
+      color: #0f0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1em;
+      padding: 1.5em 1em;
+      width: 12em;
+      margin: 100px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    .terminal-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5em;
+      background-color: #333;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      padding: 0 0.4em;
+      box-sizing: border-box;
+    }
+    
+    .terminal-controls {
+      float: right;
+    }
+    
+    .control {
+      display: inline-block;
+      width: 0.6em;
+      height: 0.6em;
+      margin-left: 0.4em;
+      border-radius: 50%;
+      background-color: #777;
+    }
+    
+    .control.close {
+      background-color: #e33;
+    }
+    
+    .control.minimize {
+      background-color: #ee0;
+    }
+    
+    .control.maximize {
+      background-color: #0b0;
+    }
+    
+    .terminal-title {
+      float: left;
+      line-height: 1.5em;
+      color: #eee;
+    }
+    
+    .text {
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 0.2em solid green; /* Cursor */
+      animation: typeAndDelete 4s steps(11) infinite,
+        blinkCursor 0.5s step-end infinite alternate;
+      margin-top: 1.5em;
+    }
+    
+    .error-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .error {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      width: 500px;
+      padding: 100px 20px;
+      backdrop-filter: brightness(0.1);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: start;
+      background: #EF665B;
+      border-radius: 8px;
+      box-shadow: 9px 14px 79px -6px #c60000,-9px -14px 79px 6px #c60000;
+    }
+    
+    .error__icon {
+      width: 20px;
+      height: 20px;
+      transform: translateY(-2px);
+      margin-right: 8px;
+    }
+    
+    .error__icon path {
+      fill: #fff;
+    }
+    
+    .error__title {
+      font-weight: 500;
+      font-size: 14px;
+      color: #fff;
+    }
+    
+    .error__close {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    
+    .error__close path {
+      fill: #fff;
+    }
+
+  </style>
+  <style>
+    .success-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .success {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      width: 500px;
+      padding: 100px 20px;
+      backdrop-filter: brightness(0.1);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: start;
+      background: #67C23A;
+      border-radius: 8px;
+      box-shadow: 9px 14px 79px -6px #00c628,-9px -14px 79px 6px #00c628;
+    }
+    
+    .success__icon {
+      width: 20px;
+      height: 20px;
+      transform: translateY(-2px);
+      margin-right: 8px;
+    }
+    
+    .success__icon path {
+      fill: #fff;
+    }
+    
+    .success__title {
+      font-weight: 500;
+      font-size: 14px;
+      color: #fff;
+    }
+    
+    .success__close {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    
+    .success__close path {
+      fill: #fff;
+    }
+    </style>
+<body>
+  <div class="success-container">
+    <div id="successAlert" class="success" style="display: none;">
+        <div class="success__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill-rule="evenodd" fill="#393a37" d="m12 1c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm4.768 9.14c.0878-.1004.1546-.21726.1966-.34383.0419-.12657.0581-.26026.0477-.39319-.0105-.13293-.0475-.26242-.1087-.38085-.0613-.11844-.1456-.22342-.2481-.30879-.1024-.08536-.2209-.14938-.3484-.18828s-.2616-.0519-.3942-.03823c-.1327.01366-.2612.05372-.3782.1178-.1169.06409-.2198.15091-.3027.25537l-4.3 5.159-2.225-2.226c-.1886-.1822-.4412-.283-.7034-.2807s-.51301.1075-.69842.2929-.29058.4362-.29285.6984c-.00228.2622.09851.5148.28067.7034l3 3c.0983.0982.2159.1748.3454.2251.1295.0502.2681.0729.4069.0665.1387-.0063.2747-.0414.3991-.1032.1244-.0617.2347-.1487.3236-.2554z" clip-rule="evenodd"></path></svg>
+        </div>
+        <div class="success__title">Custom success message goes here</div>
+        <div class="success__close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg>
+        </div>
+    </div>
+  </div>
+  <div class="error-container">
+    <div id="errorAlert" class="error" style="display: none;">
+        <div class="error__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
+        </div>
+        <div class="error__title">Custom error message goes here</div>
+        <div class="error__close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg>
+        </div>
+    </div>
+  </div>
+  <div class="nav">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.jpg') }}" alt="">
+      <h4>DropZone</h4>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('dragDrop', token=token) }}">Home</a></li>
+    </ul>
+    <div class="export----1">
+      <a href="{{ url_for('edit', token=token ) }}" style="text-decoration: none;"><button>Video Preview</button></a>
+      <!-- <button>Video Preview</button> -->
+    </div>
+    <div class="profile">
+      <div class="popup">
+        <img src="{{ url_for('static', filename='profile-pic-user.jpeg') }}" alt="Profile Picture" width="100" height="100">
+        <h4 id="user" style="display:none;">{{ user }}</h4>
+        <div class="popup-content">
+          <h3>{{ user }}</h3>
+          <p>{{ email }}</p>
+          <button class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <div class="left-column" style="width: 100%;">
+      <div class="top-row" style="height: 69vh;">
+        <div id="drop-area" class="drop-area--active">
+          <form id="uploadForm" action="{{ url_for('dragDrop', token=token) }}" method="post"
+            enctype="multipart/form-data" accept="image/*">
+            <p>Drag and drop your files here or click to select files</p>
+             <input type="file" id="fileInput" name="file" multiple style="display: none;"/>
+              <button type="button" id="selectFileButton"
+                style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">Select 
+                File</button> 
+          </form>
+        </div>
+      </div>
+      <div class="bottom-row" style="height: 20vh;">
+        <form id="audioForm" method="post" enctype="multipart/form-data">
+          <span id="selected-audio-name" style="color: white; margin-top: 10px; margin-left: 3vw;">No audio selected</span>
+          <br>
+          <br>
+          <input type="file" accept="audio/*" id="audioInput" name="audio" style="display: none"
+            onchange="handleAudioSelection('audioInput');" />
+          <button id="selectAudio" type="button"
+            style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">Select
+            Audio</button>
+          <button id="uploadAudio" accept="audio/*" onclick="showLoadingModal()"
+            style="background-color: #28a745; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">Upload
+            Audio</button>
+        </form>
+        
+      </div>
+    </div>
+
+    <div class="right-column" style="width: 100%;height:100%">
+      <div class="images">
+         <h3>Images</h3> 
+        
+      </div>
+      <button id="uploadButton" 
+        style="background-color: #28a745; color: #fff; padding: 10px 40px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">Upload</button>
+
+    </div>
+  </div>
+
+  <div id="loadingModal" class="modal">
+    <div class="modal-content">
+      <div class="terminal-loader">
+        <div class="terminal-header">
+          <div class="terminal-title">Status</div>
+          <div class="terminal-controls">
+            <div class="control close"></div>
+            <div class="control minimize"></div>
+            <div class="control maximize"></div>
+          </div>
+        </div>
+        <div class="text">Uploading...</div>
+      </div>
+    </div>
+</div>
+
+
+
+
+
+   <script src="{{ url_for('static', filename='temp_drag_drop.js') }}"></script>
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Logout button click event listener
+    document.querySelector('.logout-btn').addEventListener('click', function() {
+        // Perform logout action here, such as redirecting to logout endpoint or clearing session
+        
+        window.location.href = '/logout'; // Redirect to logout endpoint
+    });
+    });
+    </script>
+    <script>
+      // Function to show the loading modal
+      function showLoadingModal() {
+          var modal = document.getElementById('loadingModal');
+          modal.style.display = 'block';
+          modal.classList.add('fade-in'); // Add fade-in animation
+      }
+       // Function to close the modal
+    function closeModal() {
+      var modal = document.getElementById('loadingModal');
+      modal.style.display = 'none';
+    }
+  </script>
+  <script>
+    function showAlert(message) {
+        var alertElement = document.getElementById("errorAlert");
+        var titleElement = alertElement.querySelector(".error__title");
+        titleElement.textContent = message;
+        alertElement.style.display = "flex";
+    }
+    
+    function hideAlert() {
+        var alertElement = document.getElementById("errorAlert");
+        alertElement.style.display = "none";
+    }
+    
+    // Close button event listener
+    document.querySelector(".error__close").addEventListener("click", hideAlert);
+    
+    </script>
+    <script>
+      function showSuccess(message) {
+          var successElement = document.getElementById("successAlert");
+          var titleElement = successElement.querySelector(".success__title");
+          titleElement.textContent = message;
+          successElement.style.display = "flex";
+      }
+      
+      function hideSuccess() {
+          var successElement = document.getElementById("successAlert");
+          successElement.style.display = "none";
+      }
+      
+      // Close button event listener
+      document.querySelector(".success__close").addEventListener("click", hideSuccess);
+      
+      </script>
+</body>
+
+</html>

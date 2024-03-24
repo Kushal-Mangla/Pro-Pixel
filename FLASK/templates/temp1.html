@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag and Drop Upload</title>
+  <style>
+    #drop-area {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="drop-area">
+  <p>Drag and drop your files here or click to select files</p>
+  <input type="file" id="fileInput" style="display: none" />
+</div>
+
+<script>
+  const dropArea = document.getElementById('drop-area');
+
+  // Prevent default behavior (Prevent file from being opened)
+  dropArea.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    dropArea.style.border = '2px dashed #000'; // Highlight the drop area when a file is dragged over it
+  });
+
+  dropArea.addEventListener('dragleave', function () {
+    dropArea.style.border = '2px dashed #ccc'; // Reset border when the file is dragged out
+  });
+
+  dropArea.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dropArea.style.border = '2px dashed #ccc'; // Reset border when the file is dropped
+
+    const fileInput = document.getElementById('fileInput');
+    fileInput.files = e.dataTransfer.files;
+
+    // You can now handle the file upload using Ajax or form submission with the POST method
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]); // Assuming only one file is being uploaded
+
+    // Example: Using Fetch API for Ajax request
+    fetch('your-upload-endpoint', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Upload successful:', data);
+      // Handle the response from the server as needed
+    })
+    .catch(error => {
+      console.error('Error uploading file:', error);
+    });
+  });
+
+  // Optional: Clicking on the drop area triggers the file input
+  dropArea.addEventListener('click', function () {
+    const fileInput = document.getElementById('fileInput');
+    fileInput.click();
+  });
+</script>
+
+</body>
+</html>

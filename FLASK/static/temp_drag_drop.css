@@ -1,0 +1,266 @@
+body{
+  margin: 0px;
+  padding: 0px;
+  background-color: #181818;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    width: 50vw;
+    height: 40vh;
+  }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-template-rows: auto;
+  height: 90%;
+}
+
+.left-column {
+  grid-column: 1 / 2;
+  display: grid;
+  grid-template-rows: 77% 20%;
+  color: white;
+}
+
+.right-column {
+  grid-column: 2 / 3;
+  background-color: #212121;
+  color:white;
+}
+
+
+.top-row {
+  background-color: #121212;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.bottom-row {
+  background-color: #181818;
+}
+/* draft-2 */
+
+/* temp_drag_drop.css */
+
+/* Styles for the drop box */
+#drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin: 0 auto; /* Center the drop box horizontally */
+  
+}
+
+/* Styles for the file input */
+#fileInput {
+  display: none; /* Hide the file input */
+}
+
+/* Styles for the upload button */
+.upload-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-btn:hover {
+  background-color: #0056b3;
+}
+
+.nav {
+  /* position: fixed; */
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 10px 20px;
+  background-color:  #303038;
+  color: #ffffff;
+  right: 0px;
+  left: 0px;
+  top: 0px;
+  height: 75px;
+}
+
+.nav-links li a:hover {
+  color: #ffff99;
+  text-underline-position: below;
+}
+.nav-links li a::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff; 
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.5s ease-in-out;
+}
+
+.nav-links li a:hover::before {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+.logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.logo img {
+  width: 50px;
+  height: 50px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links li {
+  padding: 0px 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.profile {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Styles for the bottom part where audio is being selected */
+.bottom-row {
+  background-color:  #26262c; /* Light gray background */
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  grid-column: 1 / -1; /* Span across all columns */
+}
+.right-column {
+  height: 80vh;
+  grid-column: 2 / 3;
+  background-color: #212121;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.images {
+  margin: 20px;
+  text-align: center;
+  background-color: #333;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  /* min-height: 80%; */
+  /* max-height: 80%; */
+  height:65vh;
+  border-radius: 10px;
+  align-items: center;
+  gap:30px;
+  /* overflow-y: auto; */
+  overflow-y: scroll;
+  /* padding: 20px; */
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #333 #333;
+  scrollbar-color: #333 #333;
+
+}
+
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.image-container img {
+  width: 150px; /* Adjust the width of the images as needed */
+  height: auto;
+  margin: 5px;
+}
+.image-container img:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: transform 0.5s;
+}
+
+
+
+.export----1 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.export----1 button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  transition: all .3 ease;
+}
+
+.export----1 button:hover {
+  background-color: #262626;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* drag-drop effects */
+.drop-area--active{
+  border-color: #2196f3;
+}
+.images img{
+  border: 2px solid #333;
+  border-radius: 10px;
+  transition: all .3s ease;
+}
+.images img:hover{
+  border: 2px solid #2196f3;
+  /* transform: scale(1.1); */
+  transition: all .3s ease;
+}
+
+.cross{
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: red;
+  cursor: pointer;
+}

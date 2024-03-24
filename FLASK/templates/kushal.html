@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+</head>
+<body>
+    <h1>Image Viewer</h1>
+    <div id="imageContainer"></div> <!-- Container for the image -->
+    <script>
+        // Assume imageData contains the byte data provided by Flask
+        var imageData = "{{ image_data }}"; // Assuming image_data is a base64 encoded string
+        
+        // Create an image element
+        const img = document.createElement('img');
+        
+        // Set the image source to the base64 encoded string
+        img.src = "data:image/jpeg;base64," + imageData; // Change image/jpeg to match the image type
+        
+        // Append the image to the container
+        document.getElementById('imageContainer').appendChild(img);
+    </script>
+</body>
+</html>

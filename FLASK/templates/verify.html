@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Account</title>
+    <link rel="icon" href="{{ url_for('static', filename='logo.jpg') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forgot-pass.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='background.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <form action="{{ url_for('verify',user='user') }}" name="VerificationForm" onsubmit="return sendVerificationCode()">
+                <h2>Verify Account</h2>
+                <p id="result"></p>
+                <div class="input-box">
+                    <i class='bx bxs-key'></i>
+                    <input type="text" name="VerificationCode" id="verificationCode" placeholder=" ">
+                    <label for="verificationCode">Verification Code</label>
+                </div>
+                <div class="button">
+                    <input type="submit" class="btn" value="Verify">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='verify.js') }}"></script>
+    <script src="{{ url_for('static', filename='background.js') }}"></script>
+</body>
+</html>

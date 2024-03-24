@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <link rel="icon" href="{{ url_for('static', filename='logo.jpg') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forgot-pass.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{{ url_for('static', filename='background.css') }}">
+
+</head>
+<style>
+    .success-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      /* display:none; */
+      z-index:200000;
+    }
+    
+    /* .success {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -380%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      width: 500px;
+      padding: 100px 20px;
+      backdrop-filter: brightness(0.1);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: start;
+      background: #67C23A;
+      border-radius: 8px;
+      box-shadow: 9px 14px 79px -6px #00c628,-9px -14px 79px 6px #00c628;
+    } */
+    
+    .success {
+        position: fixed; /* Changed to fixed for centering */
+        top: 39%;
+        left: 36%;
+        /* transform: translate(-50%, -50%); Changed from -50%, -380% to -50%, -50% */
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        width: 500px;
+        padding: 100px 20px;
+        backdrop-filter: brightness(0.1);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: start;
+        background: #67C23A;
+        border-radius: 8px;
+        box-shadow: 9px 14px 79px -6px #00c628, -9px -14px 79px 6px #00c628;
+    }
+
+    .success__icon {
+      width: 20px;
+      height: 20px;
+      transform: translateY(-2px);
+      margin-right: 8px;
+    }
+    
+    .success__icon path {
+      fill: #fff;
+    }
+    
+    .success__title {
+      font-weight: 500;
+      font-size: 14px;
+      color: #fff;
+    }
+    
+    .success__close {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    
+    .success__close path {
+      fill: #fff;
+    }
+    </style>
+<style>
+/* Popup container */
+  .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  /* The actual popup (hidden by default) */
+  .popup .popup-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    padding: 12px;
+    z-index: 1;
+    border-radius: 8px; /* Adding border radius */
+    color:black;
+  }
+  
+  /* Show the popup when hovering over the popup container */
+  .popup:hover .popup-content {
+    display: block;
+  }
+  
+  /* Logout button */
+  .popup-content .logout-btn {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px; /* Adjusting padding */
+    background-color: #ff5555;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px; /* Adding border radius */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Adding shadow */
+
+    transition: background-color 0.3s;
+  }
+  .popup-content .logout-btn:hover {
+    background-color: #dd3333; /* Change background color on hover */
+  }
+    /* Styles for the modal */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        text-align: center; /* Center the content */
+        position: relative; /* For absolute positioning of spinner */
+    }
+
+    /* Add animation */
+    @keyframes fadeIn {
+        from {opacity: 0;} 
+        to {opacity: 1;}
+    }
+
+    @-webkit-keyframes fadeIn {
+        from {opacity: 0;} 
+        to {opacity: 1;}
+    }
+
+    /* Fade in */
+    .fade-in {
+        animation: fadeIn 0.3s;
+        -webkit-animation: fadeIn 0.3s;
+    }
+
+    /* Loading spinner */
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    @keyframes blinkCursor {
+      50% {
+        border-right-color: transparent;
+      }
+    }
+    
+    @keyframes typeAndDelete {
+      0%,
+      10% {
+        width: 0;
+      }
+      45%,
+      55% {
+        width: 6.2em;
+      } /* adjust width based on content */
+      90%,
+      100% {
+        width: 0;
+      }
+    }
+    
+    .terminal-loader {
+      border: 0.1em solid #333;
+      background-color: #1a1a1a;
+      color: #0f0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1em;
+      padding: 1.5em 1em;
+      width: 12em;
+      margin: 100px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    .terminal-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5em;
+      background-color: #333;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      padding: 0 0.4em;
+      box-sizing: border-box;
+    }
+    
+    .terminal-controls {
+      float: right;
+    }
+    
+    .control {
+      display: inline-block;
+      width: 0.6em;
+      height: 0.6em;
+      margin-left: 0.4em;
+      border-radius: 50%;
+      background-color: #777;
+    }
+    
+    .control.close {
+      background-color: #e33;
+    }
+    
+    .control.minimize {
+      background-color: #ee0;
+    }
+    
+    .control.maximize {
+      background-color: #0b0;
+    }
+    
+    .terminal-title {
+      float: left;
+      line-height: 1.5em;
+      color: #eee;
+    }
+    
+    .text {
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 0.2em solid green; /* Cursor */
+      animation: typeAndDelete 4s steps(11) infinite,
+        blinkCursor 0.5s step-end infinite alternate;
+      margin-top: 1.5em;
+    }
+    
+    .error-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .error {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      width: 500px;
+      padding: 100px 20px;
+      backdrop-filter: brightness(0.1);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: start;
+      background: #EF665B;
+      border-radius: 8px;
+      box-shadow: 9px 14px 79px -6px #c60000,-9px -14px 79px 6px #c60000;
+    }
+    
+    .error__icon {
+      width: 20px;
+      height: 20px;
+      transform: translateY(-2px);
+      margin-right: 8px;
+    }
+    
+    .error__icon path {
+      fill: #fff;
+    }
+    
+    .error__title {
+      font-weight: 500;
+      font-size: 14px;
+      color: #fff;
+    }
+    
+    .error__close {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    
+    .error__close path {
+      fill: #fff;
+    }
+
+  </style>
+<body>
+   
+    <div class="container">
+        <div class="form-box">
+            <form action="" name="ForgotPasswordForm" onsubmit="return sendVerificationCode()" >
+                <h2>Forgot Password</h2>
+                <p id="result"></p>
+                <div class="input-box">
+                    <i class='bx bxs-user'></i>
+                    <input type="text" name="Username" id="username" placeholder=" ">
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-box">
+                    <i class='bx bxs-envelope'></i>
+                    <input type="email" name="Email" id="email" placeholder=" ">
+                    <label for="email">Email</label>
+                </div>              
+                <div class="button">
+                    <input type="submit" class="btn" value="Send Mail">
+                </div>
+            </form>
+            
+        </div>
+    </div>
+    <div class="success-container">
+        <div id="successAlert" class="success" style="display: none;">
+            <div class="success__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill-rule="evenodd" fill="#393a37" d="m12 1c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm4.768 9.14c.0878-.1004.1546-.21726.1966-.34383.0419-.12657.0581-.26026.0477-.39319-.0105-.13293-.0475-.26242-.1087-.38085-.0613-.11844-.1456-.22342-.2481-.30879-.1024-.08536-.2209-.14938-.3484-.18828s-.2616-.0519-.3942-.03823c-.1327.01366-.2612.05372-.3782.1178-.1169.06409-.2198.15091-.3027.25537l-4.3 5.159-2.225-2.226c-.1886-.1822-.4412-.283-.7034-.2807s-.51301.1075-.69842.2929-.29058.4362-.29285.6984c-.00228.2622.09851.5148.28067.7034l3 3c.0983.0982.2159.1748.3454.2251.1295.0502.2681.0729.4069.0665.1387-.0063.2747-.0414.3991-.1032.1244-.0617.2347-.1487.3236-.2554z" clip-rule="evenodd"></path></svg>
+            </div>
+            <div class="success__title">Custom success message goes here</div>
+            <div class="success__close">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg>
+            </div>
+        </div>
+      </div>
+    <div id="loadingModal" class="modal">
+        <div class="modal-content">
+          <div class="terminal-loader">
+            <div class="terminal-header">
+              <div class="terminal-title">Status</div>
+              <div class="terminal-controls">
+                <div class="control close"></div>
+                <div class="control minimize"></div>
+                <div class="control maximize"></div>
+              </div>
+            </div>
+            <div class="text">Sending...</div>
+          </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='forgot-pass.js') }}"></script>
+    <script src="{{ url_for('static', filename='background.js') }}"></script>
+</body>
+</html>

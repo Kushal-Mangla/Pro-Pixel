@@ -1,0 +1,267 @@
+html, body {
+	margin: 0;
+	background: #383B42;
+	font-family: 'Roboto', sans-serif;
+}
+.container1 {
+	width: 100%;
+	height: 100vh;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border-radius: 10px;
+	overflow: hidden;
+}
+.explorer {
+	display: flex;
+	width: 100%;
+	height: 100vh;
+	background: #383B42;
+	border-radius: 7px;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	overflow: hidden;
+	/* box-shadow: 0 0px 55px 6px rgba(0, 0, 0, 0.18); */
+}
+.explorer .left {
+	position: absolute;
+	width: 250px;
+	height: 100%;
+	overflow: hidden;
+	z-index: 10;
+}
+.explorer .left .top {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	background: #383B42;
+}
+.explorer .left .top .navigation {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 5vh;
+	padding-left: 2vh;
+	padding-top: 1vh;
+}
+.explorer .left .top .navigation .lab {
+	position: relative;
+	display: inline-block;
+	width: 3vh;
+	height: 3vh;
+	cursor: pointer;
+	border-radius: 50%;
+	margin-right: 6%;
+	text-align: center;
+}
+.explorer .left .top .navigation .lab .material-icons {
+	font-size: 2vh;
+	line-height: 3vh;
+	color: rgba(255, 255, 255, 0.9);
+}
+.explorer .left .top .folders {
+	margin-top: 5vh;
+	width: 100%;
+	height: 82%;
+}
+.explorer .left .top .folders ul {
+	font-weight: 300;
+	list-style: none;
+	padding: 2vh;
+	margin: 0px 0px -14px;
+}
+.explorer .left .top .folders ul li {
+	color: #B1B1B1;
+	font-size: 1.6vh;
+	padding: 1vh 0.5vh;
+	cursor: pointer;
+	border-radius: 3px;
+	font-weight: 400;	
+	transition: background 0.5s;
+}
+.explorer .left .top .folders ul ul li {
+	color: #B1B1B1;
+	font-size: 1.4vh;
+	padding: 1vh 0.5vh;
+	cursor: pointer;
+	border-radius: 3px;
+	font-weight: 400;	
+	transition: background 0.5s;
+}
+
+.explorer .left .top .folders ul li .lab-accor {
+	display: block;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+.explorer .left .top .folders ul li .lab-accor .arrow-accor {
+	position: absolute;
+	right: 1.5vh;
+	transition: transform 0.5s;
+}
+#arr1{
+	position: absolute;
+	right: 1.5vh;
+	transition: transform 0.5s;
+}
+.explorer .left .top .folders ul li .material-icons {
+	font-size: 2vh;
+	padding-right: 2.7vh;
+}
+.explorer .left .top .folders ul li:hover {
+	/* background: rgba(255, 255, 255, 0.07); */
+	background: #3E3E46;
+	/* background: #B1B1B1; */
+}
+.explorer .left .top .folders ul ul {
+	height: 0px;
+	transition: height 0.3s;
+	padding: 0.5vh 4vh;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	scrollbar-width:thin;
+	scroll-behavior: smooth;
+	scrollbar-color: #B1B1B1 #1e1e1e;
+	stroke-dashoffset: 0;
+	/* scrollbar-color: #00b1ff #1e1e1e; */
+}
+#drop1, #drop2{
+	height: 0px;
+	transition: height 0.3s;
+	padding: 0.5vh 4vh;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	scrollbar-width: thin;
+	scroll-behavior: smooth;
+	stroke-dashoffset: 0;
+	scrollbar-color: #B1B1B1 #1e1e1e;
+}
+.explorer .left .top .folders ul ul .active {
+	color: #00b1ff;
+	font-weight: 500;
+}
+.explorer .left .top .folder-info {
+	position: relative;
+	width: 100%;
+	height: calc(18% - 5vh);
+}
+input[type=checkbox] {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+#pc:checked ~ ul #drop {
+	height: 25vh;
+	transition: height 0.5s;
+}
+#pc:checked ~ ul #arr {
+	transition: transform 0.5s;
+	transform: rotateX(180deg);
+}
+#pc1:checked ~ ul #drop1 {
+	height: 25vh;
+	transition: height 0.5s;
+}
+#pc1:checked ~ ul #arr1 {
+	transition: transform 0.5s;
+	transform: rotateX(180deg);
+}
+.search-box {
+	position: relative;
+	width: 100%;
+	height: 5vh;
+}
+.search-box input {
+	width: 100%;
+	height: 100%;
+	padding-left: 2vh;
+	font-size: 1.8vh;
+	border: none;
+	border-radius: 3px;
+	background: rgba(40, 40, 40, 0.1);
+	color: #b7b3b0;
+}
+.search-box input::placeholder {
+	color: #b7b3b0;
+}
+
+.search-box input:focus {
+	outline: none;
+}
+
+.search-box i {
+	position: absolute;
+	top: 0;
+	right: 6%;
+	width: 5vh;
+	height: 90%;
+	text-align: center;
+	line-height: 5vh;
+	font-size: 2.5vh;
+	color: #b7b3b0;
+	cursor: pointer;
+	transform: scale(.8);
+	transition: 0.3s;
+}
+.search-box i:hover {
+	color:  #00b1ff;
+	transform: scale(1);
+}
+.navigation{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: #B1B1B1;
+}
+.navigation i{
+	font-size: 2.5vh;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.navigation i:hover{
+	color: #00b1ff;
+	transform: scale(1.2);
+}
+
+#drop li{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	/* gap:2px; */
+
+}
+#drop1 li{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	/* gap:2px; */
+	/* height: 5vh; */
+}
+/* similar design for pc2 */
+#pc2:checked ~ ul #drop2 {
+	height: 25vh;
+	transition: height 0.5s;
+}
+#pc2:checked ~ ul #arr2 {
+	transition: transform 0.5s;
+	transform: rotateX(180deg);
+}
+#drop2 li{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	/* gap:2px; */
+	/* height: 5vh; */
+}
+
+
